@@ -7,6 +7,32 @@ Use this track for:
 - Casual conversational subtitles
 - Interactive spoken content with rapid topic shifts and strong tone
 
+## Mandatory preprocessing
+
+Before target extraction, first convert raw subtitle text into a lesson-ready passage.
+
+Minimum cleaning steps:
+
+- remove subtitle indices
+- remove timestamps
+- merge broken lines that belong to one sentence
+- drop obvious duplicates
+- remove obvious subtitle noise that does not help learning
+
+Then:
+
+- choose a coherent scene-sized segment
+- keep enough surrounding context for tone and interaction to remain visible
+- follow `references/segmentation-policy.md` for the actual cut
+
+Do not skip straight from raw `.srt` text to chunk extraction unless the text has already been cleaned elsewhere.
+
+Default segmentation posture:
+
+- medium segmentation
+- preserve scene-level coherence
+- avoid fragmenting setup, control, joke, and payoff into separate micro-lessons
+
 ## Teaching goal
 
 Prioritize:
@@ -21,6 +47,7 @@ Do not prioritize:
 - exhaustive transcript coverage
 - formal grammar sequencing
 - long word lists detached from scene and tone
+- raw subtitle fidelity at the cost of lesson quality
 
 ## What to extract
 

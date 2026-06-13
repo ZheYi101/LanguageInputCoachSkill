@@ -8,6 +8,15 @@ Use this track for:
 - explanatory articles
 - continuous reading passages
 
+## Mandatory preprocessing
+
+Before lesson generation:
+
+- normalize paragraph structure
+- remove copy noise and broken wraps
+- preserve argument structure
+- follow `references/segmentation-policy.md` for the final lesson cut
+
 ## Teaching goal
 
 Prioritize:
@@ -22,6 +31,7 @@ Do not prioritize:
 - casual spoken tone
 - chat-style chunk imitation
 - sentence-by-sentence glossing of the entire article
+- arbitrary short slicing that breaks a claim-support chain
 
 ## What to extract
 

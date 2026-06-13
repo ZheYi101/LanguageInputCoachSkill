@@ -28,8 +28,12 @@ Use this table before doing anything substantial.
 | Situation | Must load |
 | --- | --- |
 | Validate minimum fields or decide whether the input is in scope | `references/input-contract.md` |
+| A persistent `learning_root` exists or any long-term state will be read or written | `references/state-schema.md` |
+| The input is raw `.srt`, subtitle text, transcript dump, or noisy copied text | `references/text-normalization.md` |
+| Cleaned material must be cut into teachable units | `references/segmentation-policy.md` |
 | Build a lesson for a transcript, stream, subtitle, or casual spoken excerpt | `references/track-live-chat.md` |
 | Build a lesson for an article, essay, blog post, or continuous written passage | `references/track-article-reading.md` |
+| The user comes back to study or review from a persistent workspace | `references/review-policy.md` |
 | Correct learner answers and update the learning snapshot | `references/profile-schema.md` |
 | Audit whether the lesson structure is grounded in the intended pedagogy | `references/pedagogy.md` |
 | Check whether a generated lesson or correction pass is good enough | `references/validation-rubric.md` |
@@ -67,28 +71,65 @@ Optional fields:
 - `source_url`
 - `creator_or_channel`
 - `watched_or_read` default `true`
+- `material_type`
+- `learning_root`
 
 If `track` is missing, ask the user to choose. Do not auto-classify in v1.
 
+If `learning_root` is present, switch to persistent workspace behavior using [references/state-schema.md](references/state-schema.md).
+
 ## Workflow
 
-### Mode A: Build a lesson from input
+### Session start checklist for persistent mode
+
+If `learning_root` exists or the user expects long-term storage:
+
+1. Read `references/state-schema.md`.
+2. Read `.language-coach/config.json` and `.language-coach/learner_profile.json`.
+3. Query the workspace state before teaching:
+   - last session
+   - overdue review pressure
+   - whether the material is already imported
+   - whether cleaned segments already exist
+4. If review pressure is high, summarize it first using `summary_first` behavior from `references/review-policy.md`.
+5. Do not dump detailed review items by default.
+
+### Mode A: Ingest material into workspace
+
+Use this mode when the user first sends raw material and wants it stored for later learning.
 
 1. Validate the input contract.
-2. Read [references/pedagogy.md](references/pedagogy.md) only if you need to justify or audit the method.
-3. Read the track guide:
+2. If `learning_root` is missing, ask for it or stay in one-off mode.
+3. Read `references/state-schema.md`.
+4. Write the raw material into the workspace and register it in the DB.
+5. If the input is raw or noisy, normalize it before anything else.
+6. Store the cleaned result and segment metadata for future sessions.
+
+### Mode B: Build a lesson from input or from a stored segment
+
+1. Validate the input contract.
+2. If the input is raw or noisy, normalize it first using [references/text-normalization.md](references/text-normalization.md).
+3. If the text is cleaned but not segmented, apply [references/segmentation-policy.md](references/segmentation-policy.md).
+4. Read [references/pedagogy.md](references/pedagogy.md) only if you need to justify or audit the method.
+5. Read the track guide:
    - `live_chat` -> [references/track-live-chat.md](references/track-live-chat.md)
    - `article_reading` -> [references/track-article-reading.md](references/track-article-reading.md)
-4. Produce the lesson in this fixed order:
+6. If the normalized text is still too long for one useful session, choose a representative slice from the cleaned text and say what you selected.
+7. Produce the lesson in this fixed order:
    - `Scene Capsule`
    - `High-Value Chunks / Vocab`
    - `Comprehension Check`
    - `Error-Prone Rewrite`
    - `Contextual Output`
    - `Profile Delta + Review Candidates`
-5. Keep explanations concise and actionable. The goal is a session the learner can actually do.
+8. If `learning_root` is active, save:
+   - lesson artifact
+   - session row
+   - review items
+   - profile events
+9. Keep explanations concise and actionable. The goal is a session the learner can actually do.
 
-### Mode B: Review learner answers from a prior lesson
+### Mode C: Review learner answers from a prior lesson
 
 Use this mode when the user replies with answers to `Comprehension Check`, `Error-Prone Rewrite`, or `Contextual Output`.
 
@@ -101,7 +142,28 @@ Use this mode when the user replies with answers to `Comprehension Check`, `Erro
    - fixed chunk integrity
    - logical connectors
    - register mismatch
-5. End with an updated `Profile Delta + Review Candidates`.
+5. If `learning_root` is active, write:
+   - feedback artifact
+   - session completion or follow-up session
+   - review item updates
+   - profile events
+6. End with an updated `Profile Delta + Review Candidates`.
+
+### Mode D: Review mode
+
+Use this mode when the user comes back to study and the workspace already has history.
+
+1. Read `references/review-policy.md`.
+2. Query the workspace for:
+   - days since last session
+   - overdue review pressure
+   - current priority categories
+3. Start with a summary, not a long item dump.
+4. Let the agent choose whether today should be:
+   - short review first
+   - new content first
+   - mixed mode
+5. Only reveal detailed items if the user asks.
 
 ## Output contract
 
@@ -147,10 +209,19 @@ Output only the current learning delta, not a full permanent profile.
 
 - Read [references/track-live-chat.md](references/track-live-chat.md) for VTuber, stream, and casual transcript lessons.
 - Read [references/track-article-reading.md](references/track-article-reading.md) for continuous text, arguments, and article-based lessons.
+- Read [references/state-schema.md](references/state-schema.md) for persistent workspace rules.
+- Read [references/segmentation-policy.md](references/segmentation-policy.md) for material-aware slicing.
+- Read [references/review-policy.md](references/review-policy.md) for summary-first review behavior.
 - Read [references/validation-rubric.md](references/validation-rubric.md) when evaluating whether a generated lesson or correction pass is good enough.
 
 ## Important constraints
 
+- Do not teach directly from raw subtitle noise when a cleaned lesson text can be prepared first.
+- For transcripts and subtitles, cleaning is mandatory before target extraction and exercise design.
+- Do not apply one segmentation strategy to all material types.
+- Do not fragment a livestream or article until the original scene or argument becomes unusable.
+- In persistent mode, do not bypass workspace state reads and writes.
+- In review mode, do not dump all overdue items by default; summarize first and let the agent choose the agenda.
 - Do not claim the method is scientifically proven to be optimal.
 - Use research only to justify the structure, not to overstate certainty.
 - Do not drift into generic textbook instruction. Stay grounded in the provided input.
