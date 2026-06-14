@@ -248,10 +248,18 @@ input-driven-language-coach/
 |   |-- track-live-chat.md
 |   `-- validation-rubric.md
 `-- scripts/
+    |-- apply-review-actions.py
+    |-- apply-review-session.py
+    |-- clean-subtitle-transcript.py
     |-- get-review-agenda.py
+    |-- ingest-subtitle-into-learning-root.py
     |-- init-learning-root.py
     |-- migrate-learning-root.py
+    |-- normalize-subtitle-transcript.py
     |-- rebuild-profile-snapshot.py
+    |-- render-lesson-ready-transcript.py
+    |-- subtitle_pipeline.py
+    |-- test-subtitle-pipeline.py
     |-- write-json-state.py
     `-- write-sqlite-event.py
 ```

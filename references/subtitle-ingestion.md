@@ -26,11 +26,11 @@ Do not use this reference when the real task is:
 
 Prefer these bundled scripts:
 
-- `scripts/normalize-subtitle-transcript.js`
-- `scripts/render-lesson-ready-transcript.js`
-- `scripts/clean-subtitle-transcript.js`
-- `scripts/ingest-subtitle-into-learning-root.js`
-- `scripts/test-subtitle-pipeline.js`
+- `scripts/normalize-subtitle-transcript.py`
+- `scripts/render-lesson-ready-transcript.py`
+- `scripts/clean-subtitle-transcript.py`
+- `scripts/ingest-subtitle-into-learning-root.py`
+- `scripts/test-subtitle-pipeline.py`
 
 ## Track choice
 
@@ -63,19 +63,19 @@ This keeps the first pass mechanical and format-driven before any later lesson-b
 For one-off normalization:
 
 ```powershell
-node scripts/normalize-subtitle-transcript.js path\to\file.vtt
+python scripts/normalize-subtitle-transcript.py path\to\file.vtt
 ```
 
 For a whole directory:
 
 ```powershell
-node scripts/normalize-subtitle-transcript.js path\to\folder
+python scripts/normalize-subtitle-transcript.py path\to\folder
 ```
 
 For an ordered batch:
 
 ```powershell
-node scripts/normalize-subtitle-transcript.js --manifest path\to\order.txt
+python scripts/normalize-subtitle-transcript.py --manifest path\to\order.txt
 ```
 
 The normalizer should:
@@ -91,13 +91,13 @@ The normalizer should:
 After normalization, render lesson-ready output with an explicit track:
 
 ```powershell
-node scripts/render-lesson-ready-transcript.js --track article_reading path\to\file.normalized-subtitle.json
+python scripts/render-lesson-ready-transcript.py --track article_reading path\to\file.normalized-subtitle.json
 ```
 
 For a folder of normalized files:
 
 ```powershell
-node scripts/render-lesson-ready-transcript.js --track article_reading path\to\normalized-folder
+python scripts/render-lesson-ready-transcript.py --track article_reading path\to\normalized-folder
 ```
 
 The renderer should:
@@ -113,19 +113,19 @@ Use the combined cleaner only when a one-command shortcut is more useful than an
 For one-off cleaning without DB import:
 
 ```powershell
-node scripts/clean-subtitle-transcript.js --track article_reading path\to\file.vtt
+python scripts/clean-subtitle-transcript.py --track article_reading path\to\file.vtt
 ```
 
 For a whole directory:
 
 ```powershell
-node scripts/clean-subtitle-transcript.js --track article_reading path\to\folder
+python scripts/clean-subtitle-transcript.py --track article_reading path\to\folder
 ```
 
 For an ordered batch:
 
 ```powershell
-node scripts/clean-subtitle-transcript.js --track article_reading --manifest path\to\order.txt
+python scripts/clean-subtitle-transcript.py --track article_reading --manifest path\to\order.txt
 ```
 
 The cleaner should:
@@ -142,25 +142,25 @@ The cleaner should:
 For import into a `learning_root`:
 
 ```powershell
-node scripts/ingest-subtitle-into-learning-root.js --learning-root path\to\root --track article_reading path\to\file.vtt
+python scripts/ingest-subtitle-into-learning-root.py --learning-root path\to\root --track article_reading path\to\file.vtt
 ```
 
 Or import from a normalized artifact:
 
 ```powershell
-node scripts/ingest-subtitle-into-learning-root.js --learning-root path\to\root --track article_reading path\to\file.normalized-subtitle.json
+python scripts/ingest-subtitle-into-learning-root.py --learning-root path\to\root --track article_reading path\to\file.normalized-subtitle.json
 ```
 
 For a directory:
 
 ```powershell
-node scripts/ingest-subtitle-into-learning-root.js --learning-root path\to\root --track article_reading path\to\folder
+python scripts/ingest-subtitle-into-learning-root.py --learning-root path\to\root --track article_reading path\to\folder
 ```
 
 For an ordered manifest:
 
 ```powershell
-node scripts/ingest-subtitle-into-learning-root.js --learning-root path\to\root --track article_reading --manifest path\to\order.txt
+python scripts/ingest-subtitle-into-learning-root.py --learning-root path\to\root --track article_reading --manifest path\to\order.txt
 ```
 
 The importer should:
@@ -179,7 +179,7 @@ The importer should:
 Use the bundled test script when changing subtitle parsing or cleaning rules:
 
 ```powershell
-node scripts/test-subtitle-pipeline.js
+python scripts/test-subtitle-pipeline.py
 ```
 
 The current fixture set covers:

@@ -107,9 +107,9 @@ Use this mode when the user first sends raw material and wants it stored for lat
 4. If the source is a local subtitle file, subtitle directory, or ordered batch, read `references/subtitle-ingestion.md`.
 5. If the input is raw or noisy, run a mechanical normalization pass before anything else.
 6. If the source is subtitle-based, prefer the staged pipeline:
-   - `normalize-subtitle-transcript.js`
-   - `render-lesson-ready-transcript.js`
-   - `ingest-subtitle-into-learning-root.js`
+   - `normalize-subtitle-transcript.py`
+   - `render-lesson-ready-transcript.py`
+   - `ingest-subtitle-into-learning-root.py`
 7. Write the raw material into the workspace and register it in the DB.
 8. Store the cleaned result and segment metadata for future sessions.
 
@@ -176,6 +176,11 @@ Use this mode when the user comes back to study and the workspace already has hi
    - new content first
    - mixed mode
 5. Only reveal detailed items if the user asks.
+6. When the learner completes a real review pass in persistent mode, write:
+   - a `review` session row
+   - review item scheduling updates
+   - profile events if the review reveals stable gains or repeated failures
+7. If the learner asks to ignore, pause, delete, archive, or retire a review item, record a user-controlled state change instead of silently dropping it.
 
 ## Output contract
 

@@ -169,6 +169,12 @@ One row per learning or review session.
 - `finished_at`
 - `status`
 
+Recommended `session_type` values in v1:
+
+- `lesson`
+- `review`
+- `feedback`
+
 ### `review_items`
 
 Fine-grained review state. Internal tracking can be detailed even if user-facing review remains summary-first.
@@ -190,6 +196,15 @@ Fine-grained review state. Internal tracking can be detailed even if user-facing
 - `stability`
 - `priority_score`
 - `status`
+
+Minimum review writeback behavior:
+
+- set `last_reviewed_at`
+- set the next `due_at`
+- adjust `interval_days`
+- adjust `stability`
+- adjust `priority_score`
+- optionally promote an item to `mastered`
 
 ### `profile_events`
 
@@ -214,6 +229,14 @@ User-controlled overrides and deletions.
 - `action_type`
 - `reason`
 - `created_at`
+
+Typical `action_type` values:
+
+- `set_status:ignored`
+- `set_status:paused`
+- `set_status:deleted`
+- `set_status:mastered`
+- `archive`
 
 ## Status enums
 

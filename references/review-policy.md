@@ -75,3 +75,24 @@ The user must be able to:
 - say a learned item is not useful
 
 These actions should update tracking state without losing historical trace.
+
+## Review writeback expectations
+
+When a real review pass is completed in persistent mode:
+
+- create or update a `review` session in `sessions`
+- update the reviewed `review_items`
+- set `last_reviewed_at`
+- move `due_at`
+- adjust `interval_days`
+- adjust `stability`
+- adjust `priority_score`
+- mark clearly retired items as `mastered` only when appropriate
+
+v1 does not need a full SRS implementation, but it must at least distinguish outcomes like:
+
+- `again`
+- `hard`
+- `good`
+- `easy`
+- `mastered`
